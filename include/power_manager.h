@@ -11,9 +11,10 @@ public:
         _lastActivity = millis();
         _lastBatteryRead = 0;
         _lastMotionCheck = 0;
-        _batteryPct = -1;
-        _smoothBat = -1;
         _isCharging = false;
+        _smoothBat = (float)M5.Power.getBatteryLevel();
+        _batteryPct = (int)_smoothBat;
+        _isCharging = M5.Power.isCharging();
         M5.Display.setBrightness(BRIGHTNESS_ACTIVE);
         setCpuFrequencyMhz(CPU_ACTIVE);
         // Take initial accelerometer baseline
@@ -77,10 +78,7 @@ public:
             _lastBatteryRead = now;
             int raw = M5.Power.getBatteryLevel();
             _isCharging = M5.Power.isCharging();
-            if (_smoothBat < 0)
-                _smoothBat = (float)raw;
-            else
-                _smoothBat += 0.15f * ((float)raw - _smoothBat);
+            _smoothBat += 0.15f * ((float)raw - _smoothBat);
             _batteryPct = (int)(_smoothBat + 0.5f);
         }
         return _batteryPct;
