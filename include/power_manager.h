@@ -12,6 +12,7 @@ public:
         _lastBatteryRead = 0;
         _lastMotionCheck = 0;
         _batteryPct = -1;
+        _smoothBat = -1;
         _isCharging = false;
         M5.Display.setBrightness(BRIGHTNESS_ACTIVE);
         setCpuFrequencyMhz(CPU_ACTIVE);
@@ -69,13 +70,18 @@ public:
     PowerState state() const { return _state; }
     bool isDisplayOn() const { return _state < PWR_DISPLAY_OFF; }
 
-    // Cached battery percentage (updates every BATTERY_READ_INTERVAL)
+    // Smoothed battery percentage (EMA filter, updates every BATTERY_READ_INTERVAL)
     int batteryPct() {
         unsigned long now = millis();
-        if (_batteryPct < 0 || now - _lastBatteryRead >= BATTERY_READ_INTERVAL) {
+        if (now - _lastBatteryRead >= BATTERY_READ_INTERVAL) {
             _lastBatteryRead = now;
-            _batteryPct = M5.Power.getBatteryLevel();
+            int raw = M5.Power.getBatteryLevel();
             _isCharging = M5.Power.isCharging();
+            if (_smoothBat < 0)
+                _smoothBat = (float)raw;
+            else
+                _smoothBat += 0.15f * ((float)raw - _smoothBat);
+            _batteryPct = (int)(_smoothBat + 0.5f);
         }
         return _batteryPct;
     }
@@ -91,6 +97,7 @@ private:
     unsigned long _lastBatteryRead;
     unsigned long _lastMotionCheck;
     int _batteryPct;
+    float _smoothBat;
     bool _isCharging;
     float _baseAx, _baseAy, _baseAz;
 
