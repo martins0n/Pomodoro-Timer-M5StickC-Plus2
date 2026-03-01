@@ -44,6 +44,10 @@
 // ── Long-press threshold (ms) ──────────────────────────────────────
 #define LONG_PRESS_MS 600
 
+// ── Motion wake (IMU) ─────────────────────────────────────────────
+#define MOTION_CHECK_INTERVAL 200     // ms between accel reads (5 Hz)
+#define MOTION_THRESHOLD      0.3f   // delta in G to trigger wake
+
 // ── Speaker ────────────────────────────────────────────────────────
 #define BEEP_FREQ     2000
 #define BEEP_DURATION  150
