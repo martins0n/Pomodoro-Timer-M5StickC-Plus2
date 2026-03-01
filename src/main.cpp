@@ -598,8 +598,12 @@ void loop() {
     handleButtons();
     updateTimer();
 
-    bool menuOnly = (appState == STATE_MENU);
-    power.update(menuOnly);
+    unsigned long sleepTimeout = 0; // running timer: never sleep
+    if (appState == STATE_MENU || appState == STATE_CUSTOM_EDITOR || appState == STATE_CONFIRM_EXIT)
+        sleepTimeout = TIMEOUT_DEEP_SLEEP;    // 15 min
+    else if (appState == STATE_TIMER_PAUSED)
+        sleepTimeout = TIMEOUT_PAUSE_SLEEP;   // 30 min
+    power.update(sleepTimeout);
 
     // Redraw at DRAW_INTERVAL (skip if display off)
     unsigned long now = millis();

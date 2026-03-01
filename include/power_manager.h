@@ -30,8 +30,9 @@ public:
         }
     }
 
-    // Call every loop iteration. menuOnly = true when in menu (allows deep sleep).
-    void update(bool menuOnly) {
+    // Call every loop iteration.
+    // sleepTimeout: 0 = no deep sleep (timer running), >0 = ms until deep sleep
+    void update(unsigned long sleepTimeout) {
         unsigned long now = millis();
         unsigned long elapsed = now - _lastActivity;
 
@@ -55,9 +56,7 @@ public:
             break;
         case PWR_DISPLAY_OFF:
             checkMotionWake(now);
-            if (_state != PWR_ACTIVE &&
-                ((menuOnly && elapsed >= TIMEOUT_DEEP_SLEEP) ||
-                 elapsed >= TIMEOUT_GLOBAL_SLEEP)) {
+            if (_state != PWR_ACTIVE && sleepTimeout > 0 && elapsed >= sleepTimeout) {
                 _state = PWR_DEEP_SLEEP;
                 enterDeepSleep();
             }
