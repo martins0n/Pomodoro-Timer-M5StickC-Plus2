@@ -322,6 +322,14 @@ void drawTimer() {
         snprintf(loopBuf, sizeof(loopBuf), "Loop %u/%u", currentLoop, totalLoops);
     canvas.print(loopBuf);
 
+    // Battery % (small grey)
+    canvas.setTextSize(1);
+    canvas.setTextColor(CLR_DIM_TEXT);
+    char batBuf[8];
+    snprintf(batBuf, sizeof(batBuf), "%d%%", power.batteryPct());
+    canvas.setCursor(SCREEN_W - strlen(batBuf) * 6 - 4, 2);
+    canvas.print(batBuf);
+
     // Hints
     canvas.setTextSize(1);
     canvas.setTextColor(CLR_DIM_TEXT);
