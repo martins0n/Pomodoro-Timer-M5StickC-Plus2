@@ -104,32 +104,6 @@ String formatTime(uint32_t totalSec) {
     return String(buf);
 }
 
-// ── Battery icon drawing ───────────────────────────────────────────
-void drawBattery(int x, int y) {
-    int pct = power.batteryPct();
-    uint16_t color = (pct > 50) ? CLR_GREEN : (pct > 20) ? CLR_ORANGE : CLR_RED;
-
-    // Battery outline 24x12
-    canvas.drawRect(x, y, 22, 12, CLR_TEXT);
-    canvas.fillRect(x + 22, y + 3, 3, 6, CLR_TEXT);
-
-    // Fill
-    int fillW = (pct * 18) / 100;
-    if (fillW > 0)
-        canvas.fillRect(x + 2, y + 2, fillW, 8, color);
-
-    // Percentage text
-    canvas.setTextSize(1);
-    canvas.setTextColor(CLR_DIM_TEXT);
-    char buf[8];
-    if (power.isCharging())
-        snprintf(buf, sizeof(buf), "CHG");
-    else
-        snprintf(buf, sizeof(buf), "%d%%", pct);
-    canvas.setCursor(x + 28, y + 2);
-    canvas.print(buf);
-}
-
 // ── Draw: Menu ─────────────────────────────────────────────────────
 void drawMenu() {
     canvas.fillSprite(CLR_BG);
@@ -140,8 +114,13 @@ void drawMenu() {
     canvas.setCursor(10, 6);
     canvas.print("POMODORO");
 
-    // Battery
-    drawBattery(170, 6);
+    // Battery %
+    canvas.setTextSize(1);
+    canvas.setTextColor(CLR_DIM_TEXT);
+    char batBuf[8];
+    snprintf(batBuf, sizeof(batBuf), "%d%%", power.batteryPct());
+    canvas.setCursor(SCREEN_W - strlen(batBuf) * 6 - 4, 2);
+    canvas.print(batBuf);
 
     // Preset list — show 3 around selection
     int startIdx = menuIndex - 1;
