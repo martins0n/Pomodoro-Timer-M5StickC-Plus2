@@ -393,6 +393,13 @@ void advancePhase() {
 void handleButtons() {
     M5.update();
 
+    // Wake guard: if screen was dimmed/off, first press only wakes display
+    bool anyPressed = M5.BtnA.wasPressed() || M5.BtnB.wasPressed() || M5.BtnPWR.wasClicked();
+    if (anyPressed && power.state() != PWR_ACTIVE) {
+        power.resetActivity();
+        return; // consume the press — don't trigger actions
+    }
+
     // ── Button A (front, M5.BtnA) ──────────────────────────────────
     if (M5.BtnA.wasPressed()) {
         btnADownAt = millis();
