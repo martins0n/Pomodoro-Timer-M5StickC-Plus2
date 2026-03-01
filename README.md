@@ -65,8 +65,8 @@ Custom values are saved to flash and persist across reboots.
 - **30 seconds** idle → screen dims
 - **2 minutes** idle → screen off
 - **10 minutes** idle in menu → deep sleep (press A to wake)
+- **15 minutes** idle in any state → deep sleep (press A to wake)
 - CPU scales down when idle (240 → 80 MHz)
-- Timer never enters deep sleep — only menu does
 - **Motion wake**: picking up or tilting the device wakes the screen when dimmed or off (uses MPU6886 accelerometer at 5 Hz, ~0.5 mA)
 
 ## Build & Flash

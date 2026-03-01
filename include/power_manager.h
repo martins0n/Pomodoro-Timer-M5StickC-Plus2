@@ -55,7 +55,9 @@ public:
             break;
         case PWR_DISPLAY_OFF:
             checkMotionWake(now);
-            if (_state != PWR_ACTIVE && menuOnly && elapsed >= TIMEOUT_DEEP_SLEEP) {
+            if (_state != PWR_ACTIVE &&
+                ((menuOnly && elapsed >= TIMEOUT_DEEP_SLEEP) ||
+                 elapsed >= TIMEOUT_GLOBAL_SLEEP)) {
                 _state = PWR_DEEP_SLEEP;
                 enterDeepSleep();
             }

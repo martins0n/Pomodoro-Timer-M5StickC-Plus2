@@ -13,6 +13,7 @@
 #define TIMEOUT_DIM         30000UL   // 30 s  → dim
 #define TIMEOUT_DISPLAY_OFF 120000UL  // 2 min → display off
 #define TIMEOUT_DEEP_SLEEP  600000UL  // 10 min → deep sleep (menu only)
+#define TIMEOUT_GLOBAL_SLEEP 900000UL // 15 min → deep sleep (any state)
 
 // ── CPU frequencies (MHz) ──────────────────────────────────────────
 #define CPU_ACTIVE 240
